@@ -14,18 +14,20 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text("Personal Expenses"),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              color: Colors.lightBlue,
-              child: Container(
-                height: 50,
-                child: Text("Chart!!!"),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Card(
+                color: Colors.lightBlue,
+                child: Container(
+                  height: 50,
+                  child: Text("Chart!!!"),
+                ),
               ),
-            ),
-            UserTransactions(),
-          ],
+              UserTransactions(),
+            ],
+          ),
         ),
       ),
     );

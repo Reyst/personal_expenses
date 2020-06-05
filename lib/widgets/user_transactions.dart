@@ -7,7 +7,9 @@ import 'transaction_list.dart';
 
 class UserTransactions extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _UserTransactionsState();
+  State<StatefulWidget> createState() {
+    return _UserTransactionsState();
+  }
 }
 
 class _UserTransactionsState extends State<UserTransactions> {
@@ -23,15 +25,12 @@ class _UserTransactionsState extends State<UserTransactions> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
+      children: <Widget>[
         NewTransaction(
-          addAction: (title, amount) => _addTx(title, amount),
+          addAction: _addTx,
         ),
-        Container(
-          height: 300,
-          child: TransactionList(
-            transactions: _transactions,
-          ),
+        TransactionList(
+          transactions: _transactions,
         ),
       ],
     );

@@ -76,3 +76,15 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Void
+      fonts:
+        - asset: assets/fonts/void-regular.otf
+        - asset: assets/fonts/void_bold.otf
+          weight: 700
+
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/open-sans.ttf
+        - asset: assets/fonts/open-sans-bold.ttf
+          weight: 700

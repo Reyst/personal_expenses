@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'models/transaction.dart';
 import 'widgets/add_transaction.dart';
 import 'widgets/transaction_list.dart';
-//import 'widgets/user_transactions.dart';
+import 'widgets/empty_transaction_holder.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
   static String _getId() => _idGenerator.v4();
 
   final List<Transaction> _transactions = [
-    Transaction(id: _getId(), title: "Transaction 1", amount: 100.50, date: DateTime.now()),
-    Transaction(id: _getId(), title: "Transaction 2", amount: 50.33, date: DateTime.now()),
+//    Transaction(id: _getId(), title: "Transaction 1", amount: 100.50, date: DateTime.now()),
+//    Transaction(id: _getId(), title: "Transaction 2", amount: 50.33, date: DateTime.now()),
   ];
 
   void _addTx(String title, double amount) {
@@ -107,9 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 4,
               ),
             ),
-            TransactionList(
-              transactions: _transactions,
-            ),
+            _obtainContent(),
           ],
         ),
       ),
@@ -121,4 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  Widget _obtainContent() {
+    Widget result;
+
+    if (_transactions.isEmpty)
+      result = TransactionListHolder();
+    else
+      result = TransactionList(transactions: _transactions);
+
+    return result;
+  }
 }
+

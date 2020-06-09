@@ -25,6 +25,10 @@ class TransactionList extends StatelessWidget {
 
   Widget txToWidget(BuildContext context, Transaction tx) {
     return Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(
+        horizontal: 8.0,
+      ),
       child: Row(
         children: <Widget>[
           Container(

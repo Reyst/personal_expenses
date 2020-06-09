@@ -1,29 +1,29 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
-
   final List<Transaction> transactions;
 
-  const TransactionList({Key key, this.transactions}) : super(key: key);
+  TransactionList({Key key, this.transactions}) : super(key: key);
+
+  Color _highlightedTextColor;
 
   @override
   Widget build(BuildContext context) {
+    _highlightedTextColor = Theme.of(context).primaryColor;
+
     return Container(
       height: 550,
       child: ListView.builder(
-        itemBuilder: (ctx, index) => txToWidget(transactions[index]),
+        itemBuilder: (ctx, index) => txToWidget(context, transactions[index]),
         itemCount: transactions.length,
       ),
     );
   }
 
-  Widget txToWidget(Transaction tx) {
+  Widget txToWidget(BuildContext context, Transaction tx) {
     return Card(
       child: Row(
         children: <Widget>[
@@ -33,16 +33,16 @@ class TransactionList extends StatelessWidget {
               horizontal: 15,
             ),
             decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.purple,
-                  width: 2,
-                ),
+              border: Border.all(
+                color: _highlightedTextColor,
+                width: 2,
+              ),
             ),
             padding: EdgeInsets.all(10),
             child: Text(
               "\$${tx.amount.toStringAsFixed(2)}",
               style: TextStyle(
-                color: Colors.purple,
+                color: _highlightedTextColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -53,10 +53,7 @@ class TransactionList extends StatelessWidget {
             children: <Widget>[
               Text(
                 tx.title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.title,
               ),
               Text(
                 DateFormat.yMMMd().format(tx.date),

@@ -27,6 +27,35 @@ class TransactionList extends StatelessWidget {
 
   Widget txToWidget(BuildContext context, Transaction tx, Color specialColor) {
     return Card(
+      elevation: 5,
+      margin: EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 5,
+      ),
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 30,
+          child: Padding(
+            padding: EdgeInsets.all(6),
+            child: FittedBox(
+              child: Text('\$${tx.amount.toStringAsFixed(2)}'),
+            ),
+          ),
+        ),
+        title: Text(
+          tx.title,
+          style: Theme.of(context).textTheme.title,
+        ),
+        subtitle: Text(
+          DateFormat.yMMMd().format(tx.date),
+        ),
+      ),
+    );
+  }
+
+/*
+  Widget txToWidget(BuildContext context, Transaction tx, Color specialColor) {
+    return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -74,4 +103,5 @@ class TransactionList extends StatelessWidget {
       ),
     );
   }
+*/
 }

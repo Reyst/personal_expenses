@@ -3,8 +3,9 @@ import 'package:uuid/uuid.dart';
 
 import 'models/transaction.dart';
 import 'widgets/add_transaction.dart';
-import 'widgets/transaction_list.dart';
+import 'widgets/chart.dart';
 import 'widgets/empty_transaction_holder.dart';
+import 'widgets/transaction_list.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,9 +56,20 @@ class _MyHomePageState extends State<MyHomePage> {
   static String _getId() => _idGenerator.v4();
 
   final List<Transaction> _transactions = [
-//    Transaction(id: _getId(), title: "Transaction 1", amount: 100.50, date: DateTime.now()),
-//    Transaction(id: _getId(), title: "Transaction 2", amount: 50.33, date: DateTime.now()),
+//    Transaction(id: _getId(), title: "Transaction 0", amount: 0.50, date: DateTime.now().subtract(Duration(days: 7))),
+//    Transaction(id: _getId(), title: "Transaction 1", amount: 10.50, date: DateTime.now().subtract(Duration(days: 6))),
+//    Transaction(id: _getId(), title: "Transaction 2", amount: 20.85, date: DateTime.now().subtract(Duration(days: 5))),
+//    Transaction(id: _getId(), title: "Transaction 3", amount: 30.85, date: DateTime.now().subtract(Duration(days: 4))),
+//    Transaction(id: _getId(), title: "Transaction 4", amount: 40.85, date: DateTime.now().subtract(Duration(days: 3))),
+//    Transaction(id: _getId(), title: "Transaction 5", amount: 50.85, date: DateTime.now().subtract(Duration(days: 2))),
+//    Transaction(id: _getId(), title: "Transaction 6", amount: 60.85, date: DateTime.now().subtract(Duration(days: 1))),
+//    Transaction(id: _getId(), title: "Transaction 7", amount: 15, date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransactions {
+    final border = DateTime.now().subtract(Duration(days: 7));
+    return _transactions.where((tx) => tx.date.isAfter(border)).toList(growable: false);
+  }
 
   void _addTx(String title, double amount) {
     final newTx = Transaction(
@@ -101,11 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text("Chart!!!"),
-                elevation: 4,
-              ),
+              child: Chart(_recentTransactions),
             ),
             _obtainContent(),
           ],
@@ -131,4 +139,3 @@ class _MyHomePageState extends State<MyHomePage> {
     return result;
   }
 }
-

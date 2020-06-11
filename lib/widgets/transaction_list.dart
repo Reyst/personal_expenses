@@ -8,26 +8,29 @@ class TransactionList extends StatelessWidget {
 
   TransactionList({Key key, this.transactions}) : super(key: key);
 
-  Color _highlightedTextColor;
-
   @override
   Widget build(BuildContext context) {
-    _highlightedTextColor = Theme.of(context).primaryColor;
+    final Color highlightedTextColor = Theme.of(context).primaryColor;
 
     return Container(
-      height: 550,
+      height: 400,
       child: ListView.builder(
-        itemBuilder: (ctx, index) => txToWidget(context, transactions[index]),
+        itemBuilder: (ctx, index) => txToWidget(
+          context,
+          transactions[index],
+          highlightedTextColor,
+        ),
         itemCount: transactions.length,
       ),
     );
   }
 
-  Widget txToWidget(BuildContext context, Transaction tx) {
+  Widget txToWidget(BuildContext context, Transaction tx, Color specialColor) {
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(
         horizontal: 8.0,
+        vertical: 4.0
       ),
       child: Row(
         children: <Widget>[
@@ -38,7 +41,7 @@ class TransactionList extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               border: Border.all(
-                color: _highlightedTextColor,
+                color: specialColor,
                 width: 2,
               ),
             ),
@@ -46,7 +49,7 @@ class TransactionList extends StatelessWidget {
             child: Text(
               "\$${tx.amount.toStringAsFixed(2)}",
               style: TextStyle(
-                color: _highlightedTextColor,
+                color: specialColor,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),

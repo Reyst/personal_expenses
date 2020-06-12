@@ -23,8 +23,11 @@ class ChartBar extends StatelessWidget {
         margin: EdgeInsets.all(2),
         child: Column(
           children: [
-            FittedBox(
-              child: Text("\$${dayAmount.toStringAsFixed(0)}"),
+            Container(
+              height: 20,
+              child: FittedBox(
+                child: Text("\$${dayAmount.toStringAsFixed(0)}"),
+              ),
             ),
             SizedBox(height: 4),
             Container(

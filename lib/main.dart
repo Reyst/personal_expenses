@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
+              button: TextStyle(color: Colors.white),
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
@@ -71,15 +72,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return _transactions.where((tx) => tx.date.isAfter(border)).toList(growable: false);
   }
 
-  void _addTx(String title, double amount) {
+  void _addTx(String title, double amount, DateTime date) {
     final newTx = Transaction(
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: date,
       id: _getId(),
     );
     setState(() => _transactions.add(newTx));
   }
+
+
+  void _removeTransaction(String txId) {
+    setState(() => _transactions.removeWhere((tx) => tx.id == txId));
+  }
+
 
   void _showAddTxDialog(BuildContext context) {
     showModalBottomSheet(
@@ -134,7 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_transactions.isEmpty)
       result = TransactionListHolder();
     else
-      result = TransactionList(transactions: _transactions);
+      result = TransactionList(
+        transactions: _transactions,
+        removeAction: _removeTransaction,
+      );
 
     return result;
   }

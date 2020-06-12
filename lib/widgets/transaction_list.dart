@@ -5,8 +5,11 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function(String) removeAction;
 
-  TransactionList({Key key, this.transactions}) : super(key: key);
+  TransactionList({Key key, this.transactions, this.removeAction}) : super(key: key) {
+    this.transactions.sort((t1, t2) => t2.date.compareTo(t1.date));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +40,18 @@ class TransactionList extends StatelessWidget {
           radius: 30,
           child: Padding(
             padding: EdgeInsets.all(6),
-            child: FittedBox(
-              child: Text('\$${tx.amount.toStringAsFixed(2)}'),
-            ),
+            child: FittedBox(child: Text('\$${tx.amount.toStringAsFixed(2)}')),
           ),
         ),
         title: Text(
           tx.title,
           style: Theme.of(context).textTheme.title,
         ),
-        subtitle: Text(
-          DateFormat.yMMMd().format(tx.date),
+        subtitle: Text(DateFormat.yMMMd().format(tx.date)),
+        trailing: IconButton(
+          icon: Icon(Icons.delete),
+          color: Theme.of(context).errorColor,
+          onPressed: () => removeAction?.call(tx.id),
         ),
       ),
     );

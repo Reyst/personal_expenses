@@ -20,22 +20,28 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.amberAccent,
         hintColor: Colors.blueGrey,
         fontFamily: 'Quicksand',
-        textTheme: ThemeData.light().textTheme.copyWith(
-              title: TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-              button: TextStyle(color: Colors.white),
-            ),
+        textTheme: ThemeData
+            .light()
+            .textTheme
+            .copyWith(
+          title: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+          button: TextStyle(color: Colors.white),
+        ),
         appBarTheme: AppBarTheme(
-          textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+          textTheme: ThemeData
+              .light()
+              .textTheme
+              .copyWith(
+            title: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         bottomSheetTheme: BottomSheetThemeData(
           elevation: 8,
@@ -82,11 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() => _transactions.add(newTx));
   }
 
-
   void _removeTransaction(String txId) {
     setState(() => _transactions.removeWhere((tx) => tx.id == txId));
   }
-
 
   void _showAddTxDialog(BuildContext context) {
     showModalBottomSheet(
@@ -101,28 +105,43 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  double _getAvailableScreenHeight(BuildContext context, List<PreferredSizeWidget> widgets) {
+    var queryData = MediaQuery.of(context);
+    return queryData.size.height -
+        queryData.padding.bottom -
+        queryData.padding.top -
+        widgets.fold(0, (result, w) => result + w.preferredSize.height);
+  }
+
   @override
   Widget build(BuildContext context) {
+    AppBar appBar = AppBar(
+      title: Text("Personal Expenses"),
+      actions: <Widget>[
+        IconButton(
+          iconSize: 24,
+          icon: Icon(Icons.add),
+          onPressed: () => _showAddTxDialog(context),
+        ),
+      ],
+    );
+
+    double workHeight = _getAvailableScreenHeight(context, [appBar]);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Personal Expenses"),
-        actions: <Widget>[
-          IconButton(
-            iconSize: 24,
-            icon: Icon(Icons.add),
-            onPressed: () => _showAddTxDialog(context),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
-              width: double.infinity,
+              height: 0.3 * workHeight,
               child: Chart(_recentTransactions),
             ),
-            _obtainContent(),
+            Container(
+              height: 0.7 * workHeight,
+              child: _obtainContent(),
+            ),
           ],
         ),
       ),

@@ -14,8 +14,6 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     List<ChartItem> data = List.generate(7, fillDayData)..sort((a, b) => a.weekdayNumber.compareTo(b.weekdayNumber));
 
-    print(data.toString());
-
     return Card(
       elevation: 6,
       margin: EdgeInsets.all(8.0),
@@ -31,7 +29,7 @@ class Chart extends StatelessWidget {
 
   List<Widget> _obtainWidgets(List<ChartItem> data) {
     double total = data.fold(0.0, (previousValue, element) => previousValue + element.dayAmount);
-    return data.map((item) => ChartBar(item, total)).toList(growable: false);
+    return data.map((item) => Expanded(child: ChartBar(item, total))).toList(growable: false);
   }
 
   ChartItem fillDayData(int index) {
@@ -42,7 +40,7 @@ class Chart extends StatelessWidget {
         .toList(growable: false)
         .fold(0.0, (previousValue, element) => previousValue += element.amount);
 
-    return ChartItem(workDay.weekday, DateFormat.E().format(workDay).substring(0, 1), dayAmount, index == 0);
+    return ChartItem(-index, DateFormat.E().format(workDay).substring(0, 1), dayAmount, index == 0);
   }
 
   bool isDayCorrect(Transaction tx, DateTime workDay) =>

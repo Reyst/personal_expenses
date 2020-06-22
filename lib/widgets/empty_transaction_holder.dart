@@ -12,8 +12,8 @@ class TransactionListHolder extends StatelessWidget {
         SizedBox(
           height: 24,
         ),
-        Container(
-          height: 200,
+        Expanded(
+          flex: 1,
           child: Image.asset(
             "assets/images/waiting.png",
             fit: BoxFit.cover,

@@ -35,16 +35,16 @@ class MyApp extends StatelessWidget {
         hintColor: Colors.blueGrey,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-              title: TextStyle(
+              title: const TextStyle(
                 fontFamily: 'OpenSans',
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
-              button: TextStyle(color: Colors.white),
+              button: const TextStyle(color: Colors.white),
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
+                title: const TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -107,9 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               top: 10,
               bottom: mediaQuery.viewInsets.bottom,
             ),
-            child: SingleChildScrollView(
-              child: NewTransaction(addAction: _addTx),
-            ),
+            child: SingleChildScrollView(child: NewTransaction(addAction: _addTx)),
           ),
           onTap: () {},
           behavior: HitTestBehavior.opaque,

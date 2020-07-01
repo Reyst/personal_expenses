@@ -33,22 +33,24 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
+    var themeData = Theme.of(context);
+
     return Card(
       elevation: 5,
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TextField(
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: 'Title'),
               controller: _titleController,
               onSubmitted: (_) => _submitData(),
             ),
             TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
+              decoration: const InputDecoration(labelText: 'Amount'),
               controller: _amountController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:  const TextInputType.numberWithOptions(decimal: true),
               onSubmitted: (_) => _submitData(),
             ),
             Container(
@@ -64,10 +66,10 @@ class _NewTransactionState extends State<NewTransaction> {
               ),
             ),
             RaisedButton(
-              color: Theme.of(context).primaryColor,
+              color: themeData.primaryColor,
               child: Text(
                 'Add transaction',
-                style: Theme.of(context).textTheme.button,
+                style: themeData.textTheme.button,
               ),
               onPressed: _submitData,
             )

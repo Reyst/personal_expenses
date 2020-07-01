@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         hintColor: Colors.blueGrey,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-              title: const TextStyle(
+              title: const TextStyle( // ignore: deprecated_member_use
                 fontFamily: 'OpenSans',
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
-                title: const TextStyle(
+                title: const TextStyle( // ignore: deprecated_member_use
                   fontFamily: 'OpenSans',
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -129,31 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final isLandscape = mediaQueryData.orientation == Orientation.landscape;
 
-    PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text(
-              'Personal Expenses',
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                GestureDetector(
-                  child: Icon(CupertinoIcons.add),
-                  onTap: () => _showAddTxDialog(context),
-                ),
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text("Personal Expenses"),
-            actions: <Widget>[
-              IconButton(
-                iconSize: 24,
-                icon: Icon(Icons.add),
-                onPressed: () => _showAddTxDialog(context),
-              ),
-            ],
-          );
+    PreferredSizeWidget appBar = obtainAppBar(context, 'Personal Expenses', () => _showAddTxDialog(context));
 
     double workHeight = _getAvailableScreenHeight(mediaQueryData, [appBar]);
 
@@ -181,6 +157,33 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => _showAddTxDialog(context),
             ),
           );
+  }
+
+  PreferredSizeWidget obtainAppBar(BuildContext context, String title, Function onTapAction) {
+    var titleWidget = Text(title);
+    return Platform.isIOS
+      ? CupertinoNavigationBar(
+          middle: titleWidget,
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              GestureDetector(
+                child: const Icon(CupertinoIcons.add),
+                onTap: onTapAction,
+              ),
+            ],
+          ),
+        )
+      : AppBar(
+          title: titleWidget,
+          actions: <Widget>[
+            IconButton(
+              iconSize: 24,
+              icon: const Icon(Icons.add),
+              onPressed: onTapAction,
+            ),
+          ],
+        );
   }
 
   List<Widget> _getMainScreenContent(double workHeight, bool isLandscape) {

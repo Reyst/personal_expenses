@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import './adaptive_flat_button.dart';
+
 class NewTransaction extends StatefulWidget {
   final Function(String, double, DateTime) addAction;
 
@@ -54,14 +56,8 @@ class _NewTransactionState extends State<NewTransaction> {
               child: Row(
                 children: [
                   Expanded(child: Text(_strSelectedDate)),
-                  FlatButton(
-                    child: Text(
-                      'Choose date',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  AdaptiveFlatButton(
+                    caption: 'Choose date',
                     onPressed: _showDatePicker,
                   ),
                 ],

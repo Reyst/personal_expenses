@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -7,7 +10,18 @@ import 'widgets/chart.dart';
 import 'widgets/empty_transaction_holder.dart';
 import 'widgets/transaction_list.dart';
 
-void main() => runApp(MyApp());
+void main() {
+/*
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
+*/
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -20,28 +34,22 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.amberAccent,
         hintColor: Colors.blueGrey,
         fontFamily: 'Quicksand',
-        textTheme: ThemeData
-            .light()
-            .textTheme
-            .copyWith(
-          title: TextStyle(
-            fontFamily: 'OpenSans',
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-          button: TextStyle(color: Colors.white),
-        ),
-        appBarTheme: AppBarTheme(
-          textTheme: ThemeData
-              .light()
-              .textTheme
-              .copyWith(
-            title: TextStyle(
-              fontFamily: 'OpenSans',
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+        textTheme: ThemeData.light().textTheme.copyWith(
+              title: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+              button: TextStyle(color: Colors.white),
             ),
-          ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         ),
         bottomSheetTheme: BottomSheetThemeData(
           elevation: 8,
@@ -62,21 +70,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static String _getId() => _idGenerator.v4();
 
-  final List<Transaction> _transactions = [
-//    Transaction(id: _getId(), title: "Transaction 0", amount: 0.50, date: DateTime.now().subtract(Duration(days: 7))),
-//    Transaction(id: _getId(), title: "Transaction 1", amount: 10.50, date: DateTime.now().subtract(Duration(days: 6))),
-//    Transaction(id: _getId(), title: "Transaction 2", amount: 20.85, date: DateTime.now().subtract(Duration(days: 5))),
-//    Transaction(id: _getId(), title: "Transaction 3", amount: 30.85, date: DateTime.now().subtract(Duration(days: 4))),
-//    Transaction(id: _getId(), title: "Transaction 4", amount: 40.85, date: DateTime.now().subtract(Duration(days: 3))),
-//    Transaction(id: _getId(), title: "Transaction 5", amount: 50.85, date: DateTime.now().subtract(Duration(days: 2))),
-//    Transaction(id: _getId(), title: "Transaction 6", amount: 60.85, date: DateTime.now().subtract(Duration(days: 1))),
-//    Transaction(id: _getId(), title: "Transaction 7", amount: 15, date: DateTime.now()),
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recentTransactions {
     final border = DateTime.now().subtract(Duration(days: 7));
     return _transactions.where((tx) => tx.date.isAfter(border)).toList(growable: false);
   }
+
+  bool _displayChart = false;
 
   void _addTx(String title, double amount, DateTime date) {
     final newTx = Transaction(
@@ -93,20 +94,31 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showAddTxDialog(BuildContext context) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
     showModalBottomSheet(
       context: context,
       builder: (_) {
         return GestureDetector(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: mediaQuery.viewInsets.bottom,
+            ),
+            child: SingleChildScrollView(
+              child: NewTransaction(addAction: _addTx),
+            ),
+          ),
           onTap: () {},
-          child: NewTransaction(addAction: _addTx),
           behavior: HitTestBehavior.opaque,
         );
       },
     );
   }
 
-  double _getAvailableScreenHeight(BuildContext context, List<PreferredSizeWidget> widgets) {
-    var queryData = MediaQuery.of(context);
+  double _getAvailableScreenHeight(MediaQueryData queryData, List<PreferredSizeWidget> widgets) {
     return queryData.size.height -
         queryData.padding.bottom -
         queryData.padding.top -
@@ -115,46 +127,98 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    AppBar appBar = AppBar(
-      title: Text("Personal Expenses"),
-      actions: <Widget>[
-        IconButton(
-          iconSize: 24,
-          icon: Icon(Icons.add),
-          onPressed: () => _showAddTxDialog(context),
-        ),
-      ],
-    );
+    final mediaQueryData = MediaQuery.of(context);
 
-    double workHeight = _getAvailableScreenHeight(context, [appBar]);
+    final isLandscape = mediaQueryData.orientation == Orientation.landscape;
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expenses',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _showAddTxDialog(context),
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text("Personal Expenses"),
+            actions: <Widget>[
+              IconButton(
+                iconSize: 24,
+                icon: Icon(Icons.add),
+                onPressed: () => _showAddTxDialog(context),
+              ),
+            ],
+          );
+
+    double workHeight = _getAvailableScreenHeight(mediaQueryData, [appBar]);
+
+    var mainPage = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              height: 0.3 * workHeight,
-              child: Chart(_recentTransactions),
-            ),
-            Container(
-              height: 0.7 * workHeight,
-              child: _obtainContent(),
-            ),
-          ],
+          children: _getMainScreenContent(workHeight, isLandscape),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        elevation: 4,
-        child: Icon(Icons.add),
-        onPressed: () => _showAddTxDialog(context),
-      ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            navigationBar: appBar,
+            child: mainPage,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: mainPage,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: FloatingActionButton(
+              elevation: 4,
+              child: Icon(Icons.add),
+              onPressed: () => _showAddTxDialog(context),
+            ),
+          );
   }
 
-  Widget _obtainContent() {
+  List<Widget> _getMainScreenContent(double workHeight, bool isLandscape) {
+    var chart = Container(
+      height: (isLandscape ? 0.8 : 0.3) * workHeight,
+      child: Chart(_recentTransactions),
+    );
+
+    var txList = Container(
+      height: 0.7 * workHeight,
+      child: _obtainTransactionListContent(),
+    );
+
+    return <Widget>[
+      if (isLandscape)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("List"),
+            Switch.adaptive(
+              value: _displayChart,
+              onChanged: (value) => setState(() => _displayChart = value),
+            ),
+            Text("Chart"),
+          ],
+        ),
+      if (isLandscape && _displayChart) chart,
+      if (isLandscape && !_displayChart) txList,
+      if (!isLandscape) ...[
+        chart,
+        txList,
+      ],
+    ];
+  }
+
+  Widget _obtainTransactionListContent() {
     Widget result;
 
     if (_transactions.isEmpty)
